@@ -8,3 +8,4 @@ if [[ -z "$GITHUB_TOKEN" ]]; then
 fi
 
 # TODO: Implement PR review action
+echo $GITHUB_EVENT_PATH
