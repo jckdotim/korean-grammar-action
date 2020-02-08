@@ -7,5 +7,4 @@ if [[ -z "$GITHUB_TOKEN" ]]; then
   exit 1
 fi
 
-# TODO: Implement PR review action
-cat $GITHUB_EVENT_PATH
+python fix.py
