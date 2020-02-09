@@ -7,4 +7,4 @@ if [[ -z "$GITHUB_TOKEN" ]]; then
   exit 1
 fi
 
-python fix.py
+python /fix.py
