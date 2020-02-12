@@ -1,5 +1,6 @@
 import os
 import json
+import html
 
 import requests
 from github import Github
@@ -11,7 +12,7 @@ def fix(original):
         'https://m.search.naver.com/p/csearch/ocontent/util/SpellerProxy',
         params=dict(q=original, color_blindness=0)
     )
-    return response.json()['message']['result']['notag_html']
+    return html.unescape(response.json()['message']['result']['notag_html'])
 
 with open(os.environ.get('GITHUB_EVENT_PATH')) as gh_event:
     json_data = json.load(gh_event)
