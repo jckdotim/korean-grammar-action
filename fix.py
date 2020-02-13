@@ -22,12 +22,13 @@ with open(os.environ.get('GITHUB_EVENT_PATH')) as gh_event:
     ).get_pull(json_data['number'])
     for file in pr.get_files():
         for diff in parse_patch(file.patch):
+            print(diff)
             for change in diff.changes:
                 fixed = fix(change.line)
-                if not change.old and fix(change.line) != change.line:
+                if not change.old and fixed != change.line:
                     pr.create_comment(
                         f"""```suggestion\n{fixed}\n```""",
                         pr.get_commits()[0],
                         file.filename,
-                        change.new+1
+                        change.new
                     )
