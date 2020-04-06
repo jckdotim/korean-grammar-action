@@ -22,3 +22,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+# 엉터리 맞춤법 테스트
+
+원래 될거라고 생각해떤 방식이 재대로안됬다
