@@ -21,7 +21,7 @@ with open(os.environ.get('GITHUB_EVENT_PATH')) as gh_event:
         json_data['pull_request']['base']['repo']['full_name']
     ).get_pull(json_data['number'])
     for file in pr.get_files():
-        for diff in parse_patch(file.patch):
+        for position, diff in enumerate(parse_patch(file.patch)):
             print(diff)
             for change in diff.changes:
                 fixed = fix(change.line)
@@ -30,5 +30,5 @@ with open(os.environ.get('GITHUB_EVENT_PATH')) as gh_event:
                         f"""```suggestion\n{fixed}\n```""",
                         pr.get_commits()[0],
                         file.filename,
-                        change.new
+                        position
                     )
