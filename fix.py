@@ -14,12 +14,9 @@ def fix(original):
     )
     return html.unescape(response.json()['message']['result']['notag_html'])
 
-with open(os.environ.get('GITHUB_EVENT_PATH')) as gh_event:
-    json_data = json.load(gh_event)
-    g = Github(os.environ.get('GITHUB_TOKEN'))
-    pr = g.get_repo(
-        json_data['pull_request']['base']['repo']['full_name']
-    ).get_pull(json_data['number'])
+def comment_fix_suggestion(gh_token, repo_name, pr_number):
+    g = Github(gh_token)
+    pr = g.get_repo(repo_name).get_pull(pr_number)
     for file in pr.get_files():
         for line, diff in enumerate(parse_patch(file.patch)):
             print(diff)
@@ -33,3 +30,11 @@ with open(os.environ.get('GITHUB_EVENT_PATH')) as gh_event:
                         None,
                         "RIGHT", line
                     )
+
+with open(os.environ.get('GITHUB_EVENT_PATH')) as gh_event:
+    json_data = json.load(gh_event)
+    comment_fix_suggestion(
+        os.environ.get('GITHUB_TOKEN'),
+        json_data['pull_request']['base']['repo']['full_name'],
+        json_data['number']
+    )
