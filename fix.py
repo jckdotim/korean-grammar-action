@@ -18,7 +18,7 @@ def comment_fix_suggestion(gh_token, repo_name, pr_number):
     g = Github(gh_token)
     pr = g.get_repo(repo_name).get_pull(pr_number)
     for file in pr.get_files():
-        for line, diff in enumerate(parse_patch(file.patch)):
+        for diff in parse_patch(file.patch):
             print(diff)
             for change in diff.changes:
                 fixed = fix(change.line)
@@ -28,13 +28,14 @@ def comment_fix_suggestion(gh_token, repo_name, pr_number):
                         pr.get_commits()[0],
                         file.filename,
                         None,
-                        "RIGHT", line
+                        "RIGHT", change.new
                     )
 
-with open(os.environ.get('GITHUB_EVENT_PATH')) as gh_event:
-    json_data = json.load(gh_event)
-    comment_fix_suggestion(
-        os.environ.get('GITHUB_TOKEN'),
-        json_data['pull_request']['base']['repo']['full_name'],
-        json_data['number']
-    )
+if 'GITHUB_EVENT_PATH' in os.environ:
+    with open(os.environ.get('GITHUB_EVENT_PATH')) as gh_event:
+        json_data = json.load(gh_event)
+        comment_fix_suggestion(
+            os.environ.get('GITHUB_TOKEN'),
+            json_data['pull_request']['base']['repo']['full_name'],
+            json_data['number']
+        )
