@@ -1,6 +1,7 @@
 import os
 import json
 import html
+import re
 
 import requests
 from github import Github
@@ -14,12 +15,13 @@ def fix(original):
     )
     return html.unescape(response.json()['message']['result']['notag_html'])
 
-def comment_fix_suggestion(gh_token, repo_name, pr_number):
+def comment_fix_suggestion(gh_token, repo_name, pr_number, target):
     g = Github(gh_token)
     pr = g.get_repo(repo_name).get_pull(pr_number)
     for file in pr.get_files():
+        if target and not re.match(target, file.filename):
+            continue
         for diff in parse_patch(file.patch):
-            print(diff)
             for change in diff.changes:
                 fixed = fix(change.line)
                 if not change.old and fixed != change.line:
@@ -37,5 +39,6 @@ if 'GITHUB_EVENT_PATH' in os.environ:
         comment_fix_suggestion(
             os.environ.get('GITHUB_TOKEN'),
             json_data['pull_request']['base']['repo']['full_name'],
-            json_data['number']
+            json_data['number'],
+            os.environ.get('INPUT_TARGET')
         )
