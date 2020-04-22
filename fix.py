@@ -15,6 +15,7 @@ def fix(original):
     )
     return html.unescape(response.json()['message']['result']['notag_html'])
 
+
 def comment_fix_suggestion(gh_token, repo_name, pr_number, target):
     g = Github(gh_token)
     pr = g.get_repo(repo_name).get_pull(pr_number)
@@ -32,6 +33,7 @@ def comment_fix_suggestion(gh_token, repo_name, pr_number, target):
                         None,
                         "RIGHT", change.new
                     )
+
 
 if 'GITHUB_EVENT_PATH' in os.environ:
     with open(os.environ.get('GITHUB_EVENT_PATH')) as gh_event:
