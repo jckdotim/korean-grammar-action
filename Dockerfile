@@ -1,5 +1,5 @@
 # Container image that runs your code
-FROM python:3.8.0b1
+FROM python:3.8.2
 
 # Install jq
 RUN apt-get update && apt-get install jq -y
