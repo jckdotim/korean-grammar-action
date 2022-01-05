@@ -28,11 +28,12 @@ def comment_fix_suggestion(gh_token: str, repo_name: Union[str, int], pr_number:
                 fixed = fix(change.line)
                 if not change.old and fixed != change.line:
                     pr.create_comment(
-                        f"""```suggestion\n{fixed}\n```""",
-                        pr.get_commits()[0],
-                        file.filename,
-                        None,
-                        "RIGHT", change.new
+                        body=f"""```suggestion\n{fixed}\n```""",
+                        commit_id=pr.get_commits()[0],
+                        path=file.filename,
+                        position=None,
+                        side="RIGHT",
+                        line=change.new
                     )
 
 
