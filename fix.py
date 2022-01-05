@@ -2,13 +2,14 @@ import os
 import json
 import html
 import re
+from typing import Union
 
 import requests
 from github import Github
 from whatthepatch import parse_patch
 
 
-def fix(original):
+def fix(original: str) -> str:
     response = requests.get(
         'https://m.search.naver.com/p/csearch/ocontent/util/SpellerProxy',
         params=dict(q=original, color_blindness=0)
@@ -16,7 +17,7 @@ def fix(original):
     return html.unescape(response.json()['message']['result']['notag_html'])
 
 
-def comment_fix_suggestion(gh_token, repo_name, pr_number, target):
+def comment_fix_suggestion(gh_token: str, repo_name: Union[str, int], pr_number: int, target: str) -> None:
     g = Github(gh_token)
     pr = g.get_repo(repo_name).get_pull(pr_number)
     for file in pr.get_files():
