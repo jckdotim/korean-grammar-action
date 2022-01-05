@@ -40,8 +40,8 @@ if 'GITHUB_EVENT_PATH' in os.environ:
     with open(os.environ.get('GITHUB_EVENT_PATH')) as gh_event:
         json_data = json.load(gh_event)
         comment_fix_suggestion(
-            os.environ.get('GITHUB_TOKEN'),
-            json_data['pull_request']['base']['repo']['full_name'],
-            json_data['number'],
-            os.environ.get('INPUT_TARGET')
+            gh_token=os.environ.get('GITHUB_TOKEN'),
+            repo_name=json_data['pull_request']['base']['repo']['full_name'],
+            pr_number=json_data['number'],
+            target=os.environ.get('INPUT_TARGET')
         )
